@@ -126,6 +126,17 @@
     if (ok) delete b.wrong[qi]; else b.wrong[qi] = (b.wrong[qi] | 0) + 1;
     save();
   }
+  // 题卡格子的状态类：'' = 未答，' bad' = 当前在错题本，' done' = 已答对
+  //
+  // 判"错"必须看 b.wrong（错题本，答对时会被删掉），**不能看 rec.w**：
+  // rec.w 是「累计答错次数」——只增不减（stats() 的正确率、统计页的「错误 N 次」都靠它），
+  // 拿它当"当前是否答错"用，就会出现「答错过的题重做答对后格子还是红的」。
+  // 侧栏题卡和弹层题卡原本各写了一遍这段判断，于是同时错；抽到这里，别再复制。
+  function qgState(qi) {
+    var b = bstate();
+    if (!b.rec[qi]) return '';
+    return b.wrong[qi] ? ' bad' : ' done';
+  }
 
   /* =========================================================
      题卡渲染  mode: browse|practice|wrong|exam
@@ -247,8 +258,7 @@
       h += '<div class="panel"><div class="r-title">题卡' +
         ((st > 0 || en < list.length) ? '（' + (st + 1) + '-' + en + '）' : '') + '</div><div class="qgrid">';
       for (var n = st; n < en; n++) {
-        var qi = list[n], r = b.rec[qi], cls = 'qg';
-        if (r) cls += r.w ? ' bad' : ' done';
+        var qi = list[n], cls = 'qg' + qgState(qi);
         if (Q(qi).flag) cls += ' flag';
         if (b.fav[qi]) cls += ' fav';
         if (n === UI.idx) cls += ' cur';
@@ -574,8 +584,7 @@
       '<span><i style="background:var(--warn);border-radius:50%"></i>存疑题</span>' +
       '<span><i style="background:var(--fav)"></i>收藏</span></div><div class="qgrid" style="margin-top:12px">';
     list.forEach(function (qi, n) {
-      var r = b.rec[qi], cls = 'qg';
-      if (r) cls += r.w ? ' bad' : ' done';
+      var cls = 'qg' + qgState(qi);
       if (Q(qi).flag) cls += ' flag';
       if (b.fav[qi]) cls += ' fav';
       if (qi === cur) cls += ' cur';
