@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#ffffff">
+<title>刷题 · 沉浸式题库</title>
+<link rel="stylesheet" href="assets/styles.css?v=20260911a">
+</head>
+<body>
+
+<div id="app">
+  <!-- ============ 顶部 ============ -->
+  <header class="topbar">
+    <div class="tb-left">
+      <div class="logo" id="logo">Q</div>
+      <button class="tb-title" id="bankPicker" title="点击切换题库">
+        <div class="t1"><span id="bankName">题库加载中…</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
+        <div class="t2" id="bankMeta">—</div>
+      </button>
+    </div>
+    <div class="tb-right">
+      <button class="icon-btn" id="btnSearch" title="搜索题目">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      </button>
+      <button class="icon-btn" id="btnSheet" title="题卡">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      </button>
+      <button class="icon-btn" id="btnTheme" title="切换主题">
+        <svg viewBox="0 0 24 24" id="icoTheme"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>
+      </button>
+      <button class="icon-btn" id="btnSetting" title="设置">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============ 主体 ============ -->
+  <main id="main">
+
+    <!-- ---------- 练习 ---------- -->
+    <section class="page" id="page-practice">
+      <div class="modebar">
+        <div class="seg" id="modeChips">
+          <button class="chip on" data-mode="browse">背题模式</button>
+          <button class="chip" data-mode="chapter">章节练习</button>
+          <button class="chip" data-mode="random">随机刷</button>
+        </div>
+        <button class="catmenu" id="catMenu">
+          <svg class="cm-i" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+          <span class="cm-t" id="catMenuTitle">全部章节</span>
+          <span class="cm-n" id="catMenuNum">0 / 0</span>
+          <svg class="cm-a" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+      </div>
+
+      <div class="p-body">
+        <div class="stage" id="stage">
+          <div class="card-wrap" id="cardWrap"></div>
+        </div>
+        <aside class="rail" id="rail"></aside>
+      </div>
+
+      <div class="qbar">
+        <button class="nav-btn" id="btnPrev">
+          <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg><span>上一题</span>
+        </button>
+        <div class="qbar-mid">
+          <div class="pos" id="posText">0 / 0</div>
+          <div class="combo" id="comboText"></div>
+          <div class="hint">↑↓ 翻页 · A-D 选项 · S 收藏</div>
+        </div>
+        <button class="nav-btn primary" id="btnNext">
+          <span>下一题</span><svg viewBox="0 0 24 24"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- ---------- 考试 ---------- -->
+    <section class="page hide" id="page-exam">
+      <div id="examSetup" class="panel-wrap"></div>
+      <div id="examRun" class="hide"></div>
+      <div id="examResult" class="hide"></div>
+    </section>
+
+    <!-- ---------- 错题 ---------- -->
+    <section class="page hide" id="page-wrong">
+      <div class="modebar">
+        <button class="catmenu" id="wrongMenu">
+          <svg class="cm-i" viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9.5v4M12 17h.01"/></svg>
+          <span class="cm-t" id="wrongMenuTitle">全部错题</span>
+          <span class="cm-n" id="wrongMenuNum">0</span>
+          <svg class="cm-a" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+      </div>
+      <div class="panel-wrap" id="wrongBody"></div>
+    </section>
+
+    <!-- ---------- 统计 ---------- -->
+    <section class="page hide" id="page-stats">
+      <div class="panel-wrap" id="statsBody"></div>
+    </section>
+
+  </main>
+
+  <!-- ============ 底部导航 ============ -->
+  <nav class="tabbar">
+    <button class="tab on" data-tab="practice">
+      <svg viewBox="0 0 24 24"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H19v16H5.5A1.5 1.5 0 0 1 4 18.5z"/><path d="M8 8.5h7M8 12h7M8 15.5h4"/></svg>
+      <span>练习</span>
+    </button>
+    <button class="tab" data-tab="exam">
+      <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+      <span>考试</span>
+    </button>
+    <button class="tab" data-tab="wrong">
+      <svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h.01"/></svg>
+      <span>错题</span>
+    </button>
+    <button class="tab" data-tab="stats">
+      <svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+      <span>统计</span>
+    </button>
+  </nav>
+</div>
+
+<!-- ============ 弹层 ============ -->
+<div class="mask hide" id="mask"></div>
+
+<div class="sheet hide" id="sheet">
+  <div class="sheet-head">
+    <div class="sh-title" id="sheetTitle">题卡</div>
+    <button class="icon-btn" id="sheetClose">
+      <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+  <div class="sheet-body" id="sheetBody"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="data/bank-real.js?v=20260910p"></script>
+<script src="data/bank-demo.js?v=20260910b"></script>
+<script src="assets/app.js?v=20260911a"></script>
+</body>
+</html>

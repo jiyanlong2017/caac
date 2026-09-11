@@ -1,0 +1,18 @@
+# ---- 调试产物：不进仓库（tools/ 下约 4.7MB 截图与日志）----
+tools/*.png
+tools/*.log
+
+# ---- 系统 / 编辑器 ----
+Thumbs.db
+desktop.ini
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# ---- Python ----
+__pycache__/
+*.pyc
+
+# ---- Node ----
+node_modules/
