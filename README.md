@@ -43,6 +43,8 @@ caac-quiz/
     ├── verify_no_tip.js      回归守卫：确认各页面已无「答题技巧」折叠块
     ├── verify_migration.js   回归守卫：6 种历史 localStorage 形态的启动/迁移（含 bankId 兼容）
     ├── verify_badge.js       回归守卫：题卡颜色随错题本状态翻转（答错→红，答对→绿）
+    ├── verify_badge_live.js  同上，但直接测公网站点（部署后验收用）
+    ├── gh_api_push.js        应急上传：git push 通道不可用时用 Contents API 把文件写到远端
     ├── verify_live.js        线上校验：打开 Pages 公网地址断言题库/渲染/答题均正常
     └── smoke.js              playwright 冒烟测试
 ```
@@ -92,6 +94,31 @@ python -m http.server 8080 --bind 127.0.0.1
     不会把 `tools/` 里的脚本截图发上线，也不发布 `data/` 下的原始题库与辅助库
 - `.nojekyll`：让 Pages 跳过 Jekyll 处理，静态文件原样输出
 - 换了题库或改了 `assets/` 记得同时改 `index.html` 里的 `?v=` 版本号，否则浏览器会吃缓存
+
+### push 通道趴窝时的应急部署
+
+偶发（且可能持续一整天）的情况：`git push` 走代理写操作超时/握手失败，但读操作正常。
+这时不依赖 push，直接用 GitHub API 部署（`api.github.com` 本机直连可达）：
+
+```bash
+# 1) 从 GCM 取 token（gho_ 开头的 OAuth token）
+TOKEN=$(printf 'protocol=https\nhost=github.com\n\n' | env GCM_INTERACTIVE=never \
+  "C:/Users/jyl17/.workbuddy/binaries/PortableGit/versions/1.2.0/mingw64/bin/git-credential-manager.exe" get \
+  | sed -n 's/^password=//p')
+# 2) Contents API 逐文件上传（老文件自动带 sha 乐观锁；统一 LF 行尾）
+node tools/gh_api_push.js "$TOKEN"
+# 3) API 提交不触发 Actions，手动 dispatch（204 = 成功）
+curl -s -o /dev/null -w "%{http_code}\n" -X POST -H "Authorization: token $TOKEN" \
+  -H "Accept: application/vnd.github+json" \
+  "https://api.github.com/repos/jiyanlong2017/caac/actions/workflows/pages.yml/dispatches" -d '{"ref":"main"}'
+# 4) 本地同步（fetch 是 GET，能通）
+git fetch origin main -q && git reset -q FETCH_HEAD
+```
+
+注意事项：
+- Contents API 每个文件一个 commit（历史会有同 message 的重复提交），应急可接受，恢复后回到 push。
+- push 卡死的另一常见原因是 credential helper 链里的 `helper-selector` 挂死 ——
+  用 `-c credential.helper='!<GCM 绝对路径>'` 只挂 GCM 本体可绕过。
 
 ### 本机网络注意事项（重要）
 
