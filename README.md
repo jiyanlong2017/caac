@@ -7,6 +7,9 @@
 ```
 caac-quiz/
 ├── index.html                页面骨架
+├── .nojekyll                 让 GitHub Pages 跳过 Jekyll
+├── .github/workflows/
+│   └── pages.yml             GitHub Actions：推送 main 自动部署到 Pages
 ├── assets/
 │   ├── styles.css            主题、布局、响应式
 │   └── app.js                全部交互与状态（IIFE，无依赖）
@@ -31,6 +34,7 @@ caac-quiz/
     ├── scan_suspicious.py    可疑题扫描（选项与解析冲突、解析自相矛盾）
     ├── shot_fixes.js         修复验证截图（playwright 打开 → 搜索跳题 → 截图）
     ├── verify_no_tip.js      回归守卫：确认各页面已无「答题技巧」折叠块
+    ├── verify_live.js        线上校验：打开 Pages 公网地址断言题库/渲染/答题均正常
     └── smoke.js              playwright 冒烟测试
 ```
 
@@ -62,6 +66,36 @@ python tools/scan_text.py                        # 文本层体检
 python -m http.server 8080 --bind 127.0.0.1
 # 浏览器打开 http://127.0.0.1:8080/
 ```
+
+## 在线地址 / 部署
+
+**线上站点：https://jiyanlong2017.github.io/caac/**
+仓库：https://github.com/jiyanlong2017/caac
+
+纯静态站，用 GitHub Actions 自动部署，**推送 `main` 即上线**（约 40 秒）：
+
+- 工作流：`.github/workflows/pages.yml`
+  - `actions/configure-pages@v5` 带 `enablement: true` —— 首次运行会用工作流自带的 `GITHUB_TOKEN`
+    **自动开启仓库的 Pages**，不需要人工去 Settings → Pages 点开关
+  - `upload-pages-artifact` 只打包 `index.html` / `assets/` / `data/` / `.nojekyll`，
+    不会把 `tools/` 里的脚本和截图发到线上
+- `.nojekyll`：让 Pages 跳过 Jekyll 处理，静态文件原样输出
+- 换了题库或改了 `assets/` 记得同时改 `index.html` 里的 `?v=` 版本号，否则浏览器会吃缓存
+
+### 本机网络注意事项（重要）
+
+这台机器直连 `github.com:443` 不通，且 shell 环境里被注入了 `GIT_TERMINAL_PROMPT=0`（会让
+Git Credential Manager 拒绝弹认证界面）。push 请用：
+
+```bash
+git -c http.proxy=http://127.0.0.1:7897 -c https.proxy=http://127.0.0.1:7897 \
+    -c http.version=HTTP/1.1 push origin main
+```
+
+- 代理端口 `7897` 是你本机的可用代理；环境变量里的 `http_proxy` 端口会变、可能是死的
+- `-c http.version=HTTP/1.1` 能绕开部分代理对分块响应的处理问题
+- 该通道偶发超时，**重试一两次即可成功**
+- `api.github.com` 直连是通的，所以查仓库/Pages/Actions 状态不用代理
 
 ## 替换真实题库
 
