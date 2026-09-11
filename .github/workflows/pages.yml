@@ -1,0 +1,53 @@
+name: Deploy to GitHub Pages
+
+# 推送到 main 即自动部署；也可在 Actions 页手动触发
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同一时间只保留一次部署
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # enablement: true 会在首次运行时自动开启仓库的 Pages 功能
+      # （用工作流自带的 GITHUB_TOKEN，无需人工去 Settings 点开关）
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      # 纯静态站：只把要发布的文件挑出来，避免把 tools/ 脚本一起发上去
+      - name: Stage site
+        run: |
+          mkdir -p _site
+          cp index.html _site/
+          cp .nojekyll _site/
+          cp -r assets data _site/
+          echo "--- staged ---"
+          find _site -type f | sort
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
