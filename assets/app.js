@@ -1,7 +1,11 @@
 /* =========================================================
    沉浸式题库刷题 · app.js
+   题库读取全局变量 window.CAAC_BANK（单题库，无映射表）。
    数据契约（替换真实题库时保持这些字段即可）：
-     { id, cat, type:'single'|'multi', q, opts:[], ans:number|number[], exp, tip, flag }
+     顶层：{ name, subtitle?, version, source, cats:[], questions:[] }
+             name     = 顶栏站点名
+             subtitle = 副行前缀（如「超视距（机长）理论考试」），可省略
+     题目：{ id, cat, type:'single'|'multi', q, opts:[], ans:number|number[], exp, flag }
    ========================================================= */
 (function () {
   'use strict';
@@ -953,7 +957,8 @@
     h += '</div>';
     h += '<div class="panel"><div class="ph"><h3>题库</h3></div>';
     h += '<div class="srow"><div class="lb">' + esc(bank().name) +
-      '<div class="d">' + bank().questions.length + ' 题 · ' + bank().cats.length + ' 章节 · ' + esc(bank().version) + '</div></div></div>';
+      '<div class="d">' + (bank().subtitle ? esc(bank().subtitle) + ' · ' : '') +
+      bank().questions.length + ' 题 · ' + bank().cats.length + ' 章节 · ' + esc(bank().version) + '</div></div></div>';
     h += '</div>';
     h += '<div class="panel"><div class="ph"><h3>章节进度</h3></div>' +
       '<div class="srow"><div class="lb">重置当前章节的答题进度<div class="d">仅清掉「已做 / 正确率」，保留错题、收藏与存疑；可在切到对应章节后再点重置</div></div>' +
@@ -978,7 +983,11 @@
   function applyBank() {
     var b = bank(), st = bstate();
     $('#bankName').textContent = b.name;
-    $('#bankMeta').textContent = b.questions.length + ' 题 · ' + b.cats.length + ' 章节 · ' + b.version;
+    // 副行：考试范围（窄屏隐藏，否则会把「1691 题」挤掉）+ 题量 · 章节数。
+    // 版本号不放这儿了 —— 顶栏太窄，它也不是访客关心的信息，设置页里已经有一份。
+    $('#bankMeta').innerHTML =
+      (b.subtitle ? '<span class="scope">' + esc(b.subtitle) + ' · </span>' : '') +
+      b.questions.length + ' 题 · ' + b.cats.length + ' 章节';
     UI.chapter = (st.session && st.session.chapter) || '全部';
     if (UI.chapter !== '全部' && b.cats.indexOf(UI.chapter) < 0) UI.chapter = '全部';
     var mode = (st.session && st.session.mode) || 'browse';

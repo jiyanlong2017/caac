@@ -55,6 +55,7 @@ function check(ok, label, got) {
       logoNatural: l ? l.naturalWidth + 'x' + l.naturalHeight : '-',
       shownName: t1 ? t1.textContent.trim() : '(无)',
       meta: t2 ? t2.textContent.trim() : '(无)',
+      scopeHidden: (() => { const s = document.querySelector('.tb-title .t2 .scope'); return !!s && getComputedStyle(s).display === 'none'; })(),
       bank: b.name || '(未加载)',
       n: (b.questions || []).length,
       firstQ: q ? q.textContent.trim().slice(0, 30) : '(无)',
@@ -69,6 +70,9 @@ function check(ok, label, got) {
   check(info.bank === EXPECT_BANK, '题库 name 字段', info.bank);
   check(info.logoLoaded, 'logo 加载成功（naturalWidth>0）', info.logoNatural);
   check(/favicon\.png/.test(info.iconHref), 'favicon 指向图标', info.iconHref);
+  check(/超视距（机长）理论考试/.test(info.meta), '副行含考试范围', info.meta);
+  check(/1691 题/.test(info.meta), '副行含题量', info.meta);
+  check(!info.scopeHidden, '宽屏未隐藏考试范围');
   check(info.n === EXPECT_Q, '题目数', info.n);
   check(info.catCards > 0, '章节入口存在', info.catCards);
 

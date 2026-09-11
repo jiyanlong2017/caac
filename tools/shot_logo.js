@@ -44,16 +44,21 @@ const CASES = [
       const l = document.querySelector('.logo img');
       const t1 = document.querySelector('.tb-title .t1');
       const t2 = document.querySelector('.tb-title .t2');
+      const sc = document.querySelector('.tb-title .t2 .scope');
       return {
         logoLoaded: !!(l && l.naturalWidth > 0),
         logoNatural: l ? l.naturalWidth + 'x' + l.naturalHeight : '-',
         logoBox: l ? Math.round(l.getBoundingClientRect().width) + 'x' + Math.round(l.getBoundingClientRect().height) : '-',
         name: t1 ? t1.textContent.trim() : '(无)',
-        meta: t2 ? t2.textContent.trim() : '(无)',
+        // innerText 会跳过 display:none 的元素，才能反映「实际看得见」的副行
+        meta: t2 ? (t2.innerText || t2.textContent).trim().replace(/\s+/g, ' ') : '(无)',
+        scopeHidden: !!sc && getComputedStyle(sc).display === 'none',
         title: document.title,
       };
     });
-    console.log(`[${c.name}] 标题=${info.title} | logo加载=${info.logoLoaded ? '是' : '否'} 原图${info.logoNatural} 显示${info.logoBox} | 站名=${info.name} | ${info.meta}`);
+    console.log(`[${c.name}] 标题=${info.title} | logo加载=${info.logoLoaded ? '是' : '否'} 原图${info.logoNatural} 显示${info.logoBox} | 站名=${info.name} | 副行=${info.meta}`);
+    if (c.w < 640 && !info.scopeHidden) errs.push(c.name + ' 窄屏未隐藏考试范围（副行会被挤断）');
+    if (c.w >= 640 && info.scopeHidden) errs.push(c.name + ' 宽屏误隐藏了考试范围');
     const bar = await page.$('.topbar');
     if (bar) await bar.screenshot({ path: `tools/logo-${c.name}.png` });
     await page.close();

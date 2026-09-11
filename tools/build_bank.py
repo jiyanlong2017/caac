@@ -600,7 +600,9 @@ for q in out:
     if q["cat"] not in cats:
         cats.append(q["cat"])
 
-bank = dict(name="CAAC理论题库", version="2026-07-30-v2",
+bank = dict(name="CAAC理论题库",
+            subtitle="超视距（机长）理论考试",
+            version="2026-07-30-v2",
             source="开源社区整理，已做规范化与可疑题标注",
             cats=cats, questions=out)
 
