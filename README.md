@@ -126,15 +126,20 @@ git fetch origin main -q && git reset -q FETCH_HEAD
 Git Credential Manager 拒绝弹认证界面）。push 请用：
 
 ```bash
-env -u http_proxy -u https_proxy \
+env -u http_proxy -u https_proxy -u HTTP_PROXY -u HTTPS_PROXY \
+    GIT_TERMINAL_PROMPT=0 GCM_INTERACTIVE=never GCM_GUI_PROMPT=0 \
     git -c http.proxy=http://127.0.0.1:7897 -c https.proxy=http://127.0.0.1:7897 \
-        -c http.version=HTTP/1.1 push origin main
+        -c http.version=HTTP/1.1 \
+        -c credential.helper='!C:/Users/jyl17/.workbuddy/binaries/PortableGit/versions/1.2.0/mingw64/bin/git-credential-manager.exe' \
+        push origin main
 ```
 
-- 先用 `env -u` 把环境里那两个可能指向死端口的 `http_proxy` / `https_proxy` 摘掉，再显式指定 7897
+- 先用 `env -u` 把环境里那些可能指向死端口的代理变量摘掉，再显式指定 7897
 - 代理端口 `7897` 是你本机的可用代理；环境变量里的 `http_proxy` 端口会变、可能是死的
 - `-c http.version=HTTP/1.1` 能绕开部分代理对分块响应的处理问题
-- 该通道偶发超时，**重试一两次即可成功**
+- **`-c credential.helper=...` 只挂 GCM 本体**：全局配置的 helper 链里排第一个的是 WorkBuddy 注入的
+  `helper-selector`，它会间歇性挂死（`git push` 卡住无输出，连 GCM 都不会被调用），去掉它秒过
+- 该通道偶发超时，**重试一两次即可成功**；单次 push 可能跑 1~3 分钟，丢后台跑
 - `api.github.com` 直连是通的，所以查仓库/Pages/Actions 状态不用代理
 
 ## 替换真实题库
