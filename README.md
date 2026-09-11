@@ -41,6 +41,8 @@ caac-quiz/
     ├── shot_fixes.js         修复验证截图（playwright 打开 → 搜索跳题 → 截图）
     ├── shot_logo.js          顶栏截图（桌面/移动 × 浅色/深色）校验 logo 与站名
     ├── verify_no_tip.js      回归守卫：确认各页面已无「答题技巧」折叠块
+    ├── verify_migration.js   回归守卫：6 种历史 localStorage 形态的启动/迁移（含 bankId 兼容）
+    ├── verify_badge.js       回归守卫：题卡颜色随错题本状态翻转（答错→红，答对→绿）
     ├── verify_live.js        线上校验：打开 Pages 公网地址断言题库/渲染/答题均正常
     └── smoke.js              playwright 冒烟测试
 ```
@@ -310,6 +312,10 @@ env -u http_proxy -u https_proxy \
 - **切换题库**：已移除。现在是单题库应用，顶栏标题只作文本展示，不可点击。
 - **搜索**：顶部放大镜，支持题干关键词、章节名、题号（如 `#1039`），最多返回 50 条，点击直接跳转。
 - **桌面端**（≥1100px）：左侧题卡 + 右侧信息栏（学习概览 / 当前范围 / 题卡窗口 / 快捷键）。
+- **题卡格子的颜色语义**（2026-09-11 修复）：绿 = 已答对（当前不在错题本），红 = **当前在错题本**，
+  灰 = 未答。答错过的题重做答对后会**立刻变绿**——判据是错题本 `b.wrong`（答对即移除），
+  不是累计答错次数 `rec.w`（那是统计「正确率 / 错误 N 次」用的，只增不减；
+  曾误用它做颜色判据，导致答对的题格子永远红着）。守卫：`node tools/verify_badge.js`。
 - **考试保护**：考试进行中切换页面会弹确认框，避免误触丢答案。
 
 ## 答题技巧（已下线）
@@ -356,7 +362,11 @@ python tools/make_logo.py logo-src.png     # 省略参数时默认读根目录�
 - 已删除 `data/bank-demo.js`，以及 `assets/app.js` 里的 `BANKS` 映射、`bankId` 存档字段、`sheetBank()`、
   `switchBank` / `bankPicker` 事件绑定。
 - 现在 `assets/app.js` 里是 `var BANK = window.CAAC_BANK;` —— 单题库，没有映射表。
-- `load()` 里保留了一句 `delete r.bankId;`：老存档里可能存着 `bankId: 'real'`，不清掉会走到取不到题库的分支。
+- `load()` 里保留了一句 `delete r.bankId;`：老存档里可能存着 `bankId: 'real'` 或 `'demo'`，不清掉会走到取不到题库的分支。
+  **这条路径有专门的回归守卫**：`node tools/verify_migration.js` 覆盖 6 种历史存档形态
+  （bankId=real 有进度 / bankId=demo 但 real 也有数据 / 只有 banks.demo / 非法 JSON / 版本号不符 / 空存档），
+  逐例断言「不落入题库加载失败兜底页 + 题卡已渲染 + 主题按存档恢复 + 已做题数正确 + 落盘后无 bankId」。
+  关键用例是第 2 个：demo 存 5 条、real 存 3 条，读错库的话已做题数会变成 5。
 - 设置面板里原来的「题库切换」区改成了只展示题库名与统计。
 - 顺带清掉了 `tools/smoke.js` 里依赖示例库的多选用例（真题库 1691 题全是单选）。
 - 改完记得改 `index.html` 里 `app.js` / `bank-real.js` 的 `?v=`。
