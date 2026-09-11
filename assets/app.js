@@ -253,11 +253,8 @@
       ICON.grid + ' 选择章节（' + bank().cats.length + ' 个）</button></div>';
 
     if (list.length) {
-      var N = 60;
-      var st = Math.max(0, Math.min(UI.idx - 24, list.length - N)), en = Math.min(list.length, st + N);
-      h += '<div class="panel"><div class="r-title">题卡' +
-        ((st > 0 || en < list.length) ? '（' + (st + 1) + '-' + en + '）' : '') + '</div><div class="qgrid">';
-      for (var n = st; n < en; n++) {
+      h += '<div class="panel"><div class="r-title">题卡 · 共 ' + list.length + ' 题</div><div class="qgrid">';
+      for (var n = 0; n < list.length; n++) {
         var qi = list[n], cls = 'qg' + qgState(qi);
         if (Q(qi).flag) cls += ' flag';
         if (b.fav[qi]) cls += ' fav';
