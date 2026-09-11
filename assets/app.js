@@ -7,7 +7,7 @@
   'use strict';
 
   var LS = 'caac_quiz_v1';
-  var BANKS = { real: window.CAAC_BANK, demo: window.DEMO_BANK };
+  var BANK = window.CAAC_BANK;
 
   /* ---------------- 工具 ---------------- */
   function $(s, r) { return (r || document).querySelector(s); }
@@ -50,14 +50,18 @@
 
   /* ---------------- 持久化状态 ---------------- */
   var DEF = {
-    v: 1, bankId: 'real', theme: 'light',
+    v: 1, theme: 'light',
     settings: { autoExp: false, shake: true, autoNext: false, passLine: 80, examSize: 100, examDur: 3600 },
     banks: {}, exams: []
   };
   var S = load();
   function load() {
-    try { var r = JSON.parse(localStorage.getItem(LS)); if (r && r.v === 1) return r; } catch (e) { }
-    return JSON.parse(JSON.stringify(DEF));
+    var r = null;
+    try { r = JSON.parse(localStorage.getItem(LS)); } catch (e) { }
+    if (!r || r.v !== 1) r = JSON.parse(JSON.stringify(DEF));
+    // 兼容旧存档：题库只剩真题库，清掉可能残留的 bankId（曾选过示例库会导致取不到题库）
+    delete r.bankId;
+    return r;
   }
   var saveT;
   function save() {
@@ -67,13 +71,13 @@
     }, 200);
   }
   function bstate(id) {
-    id = id || S.bankId;
+    id = id || 'real';
     if (!S.banks[id]) S.banks[id] = { rec: {}, wrong: {}, fav: {}, doubt: {}, session: null };
     var b = S.banks[id];
     ['rec', 'wrong', 'fav', 'doubt'].forEach(function (k) { if (!b[k]) b[k] = {}; });
     return b;
   }
-  function bank() { return BANKS[S.bankId]; }
+  function bank() { return BANK; }
   function Q(i) { return bank().questions[i]; }
 
   /* ---------------- 运行时 ---------------- */
@@ -323,8 +327,6 @@
     });
     h += '</div>';
     h += '<div class="legend" style="margin-top:14px">共 ' + bank().cats.length + ' 个章节 · 进度条＝已做 / 本章题量 · 点击切换</div>';
-    h += '<button class="btn ghost sm block" style="margin-top:12px" data-act="sheetBank">' +
-      ICON.grid + ' 当前题库：' + esc(bank().name) + '（' + bank().questions.length + ' 题）· 点击切换</button>';
     openSheet('选择章节', h);
   }
   function setChapter(c) {
@@ -438,7 +440,7 @@
     var rec = {
       date: Date.now(), total: EX.qids.length, correct: correct,
       score: Math.round(correct / EX.qids.length * 100), pass: S.settings.passLine,
-      usedSec: used, qids: EX.qids, answers: answers, wrongs: wrongs, bankId: S.bankId
+      usedSec: used, qids: EX.qids, answers: answers, wrongs: wrongs
     };
     S.exams.unshift(rec); if (S.exams.length > 50) S.exams.length = 50;
     save(); showExamResult(rec, auto);
@@ -524,8 +526,7 @@
     h += '<div class="panel"><div class="ph"><h3>快捷入口</h3></div><div class="row">' +
       '<button class="btn ghost sm" data-act="sheetFlag">⚠ 存疑题 ' + s.flags + '</button>' +
       '<button class="btn ghost sm" data-act="sheetDoubt">我标记的 ' + s.doubt + '</button>' +
-      '<button class="btn ghost sm" data-act="sheetFav">收藏 ' + s.fav + '</button>' +
-      '<button class="btn ghost sm" data-act="sheetBank">切换题库</button></div></div>';
+      '<button class="btn ghost sm" data-act="sheetFav">收藏 ' + s.fav + '</button></div></div>';
     if (S.exams.length) {
       h += '<div class="panel"><div class="ph"><h3>考试历史</h3><span class="sp"></span><span class="sub">' + S.exams.length + ' 次</span></div>';
       S.exams.slice(0, 10).forEach(function (e, i) {
@@ -658,25 +659,6 @@
     mountCard($('#cardWrap'), qi, UI.mode, null);
     updBar();
   }
-  function sheetBank() {
-    var DESCS = {
-      real: 'CAAC 超视距（机长）理论完整题库，备考用这个',
-      demo: '20 道手写题（含 8 道多选），仅用于演示多选题交互'
-    };
-    var h = '';
-    Object.keys(BANKS).forEach(function (k) {
-      var b = BANKS[k], on = S.bankId === k;
-      h += '<div class="srow"><div class="lb">' + esc(b.name) +
-        '<div class="d">' + b.questions.length + ' 题 · ' + b.cats.length + ' 章节 · ' + esc(b.version) +
-        '<br>' + esc(DESCS[k] || '') + '</div></div>' +
-        '<button class="btn sm' + (on ? '' : ' ghost') + '" data-act="switchBank" data-k="' + k + '">' +
-        (on ? '当前使用' : '切换到此库') + '</button></div>';
-    });
-    h += '<div style="font-size:12px;color:var(--muted);margin-top:14px;line-height:1.75">' +
-      '切换题库不会丢失数据，两套题库的进度分开保存。<br>' +
-      '替换真实题库：把新题库按同样结构写成 <code>window.CAAC_BANK = {name,version,cats,questions:[…]}</code> 放进 <code>data/bank-real.js</code> 即可，字段说明见该文件头部注释。</div>';
-    openSheet('切换题库', h);
-  }
   function sheetReview(i) {
     var e = S.exams[i]; if (!e) return;
     openSheet('考试回顾 · ' + e.score + ' 分',
@@ -804,9 +786,6 @@
     // 章节 / 错题分组菜单（点击打开卡片式菜单，不再用横向 tag）
     $('#catMenu').onclick = sheetCatMenu;
     $('#wrongMenu').onclick = sheetWrongMenu;
-    // 顶部题库名可直接点开切换
-    var bankPicker = $('#bankPicker');
-    if (bankPicker) bankPicker.onclick = sheetBank;
     // 练习卡片
     $('#cardWrap').addEventListener('click', function (e) {
       var acc = e.target.closest('.acc-h');
@@ -852,11 +831,6 @@
       else if (a === 'sheetDoubt') sheetList('我标记的存疑题', Object.keys(b.doubt).map(Number));
       else if (a === 'sheetFav') sheetList('我的收藏', Object.keys(b.fav).map(Number));
       else if (a === 'sheetFlag') sheetList('题库存疑题', bank().questions.map(function (q, i) { return q.flag ? i : -1; }).filter(function (i) { return i >= 0; }));
-      else if (a === 'sheetBank') sheetBank();
-      else if (a === 'switchBank') {
-        if (t.dataset.k === S.bankId) { closeSheet(); return; }
-        S.bankId = t.dataset.k; save(); closeSheet(); applyBank(); toast('已切换到 ' + bank().name);
-      }
       else if (a === 'reviewExam') sheetReview(+t.dataset.i);
       else if (a === 'revFilter') {
         var e2 = S.exams[+t.dataset.i];
@@ -978,11 +952,8 @@
     h += '<div class="srow"><div class="lb">单选答对后自动跳下一题<div class="d">打开后刷起来更连贯</div></div><div class="sw' + (s.autoNext ? ' on' : '') + '" data-act="set" data-k="autoNext"></div></div>';
     h += '</div>';
     h += '<div class="panel"><div class="ph"><h3>题库</h3></div>';
-    Object.keys(BANKS).forEach(function (k) {
-      var b = BANKS[k];
-      h += '<div class="srow"><div class="lb">' + esc(b.name) + '<div class="d">' + b.questions.length + ' 题 · ' + b.cats.length + ' 章节</div></div>' +
-        '<button class="btn sm' + (S.bankId === k ? '' : ' ghost') + '" data-act="switchBank" data-k="' + k + '">' + (S.bankId === k ? '当前' : '切换') + '</button></div>';
-    });
+    h += '<div class="srow"><div class="lb">' + esc(bank().name) +
+      '<div class="d">' + bank().questions.length + ' 题 · ' + bank().cats.length + ' 章节 · ' + esc(bank().version) + '</div></div></div>';
     h += '</div>';
     h += '<div class="panel"><div class="ph"><h3>章节进度</h3></div>' +
       '<div class="srow"><div class="lb">重置当前章节的答题进度<div class="d">仅清掉「已做 / 正确率」，保留错题、收藏与存疑；可在切到对应章节后再点重置</div></div>' +
@@ -1025,7 +996,7 @@
     if (UI.tab === 'stats') renderStats();
   }
   function init() {
-    if (!BANKS.real || !BANKS.demo) { document.body.innerHTML = '题库加载失败'; return; }
+    if (!BANK) { document.body.innerHTML = '题库加载失败'; return; }
     applyTheme(); bind(); applyBank(); switchTab('practice');
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);

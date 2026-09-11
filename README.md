@@ -1,6 +1,8 @@
-# CAAC 沉浸式题库刷题 · caac-quiz
+# CAAC理论题库 · caac-quiz
 
-一个纯前端（零依赖、无构建）的 CAAC 超视距（机长）理论题库刷题应用，单 HTML + 原生 JS + CSS，支持背题 / 章节 / 随机 / 错题重做 / 模拟考试 / 统计 / 收藏存疑 / 深浅主题 / 响应式。
+> 站点名：**CAAC理论题库**（在线地址见下方「在线地址 / 部署」一节）
+
+一个纯前端（零依赖、无构建）的 CAAC 超视距（机长）理论题库刷题应用，单 HTML + 原生 JS + CSS，支持背题 / 章节 / 随机 / 错题重做 / 模拟考试 / 统计 / 收藏存疑 / 深浅主题 / 响应式。题库只有一个（真题库 1691 题），不做切换。
 
 ## 文件结构
 
@@ -12,15 +14,19 @@ caac-quiz/
 │   └── pages.yml             GitHub Actions：推送 main 自动部署到 Pages
 ├── assets/
 │   ├── styles.css            主题、布局、响应式
-│   └── app.js                全部交互与状态（IIFE，无依赖）
+│   ├── app.js                全部交互与状态（IIFE，无依赖）
+│   ├── logo.png              整枚 CAAC logo（白底已抠成透明，高 132px）
+│   ├── logo-mark.png         徽标（飞翼+五角星）单独裁出，高 128px —— 标题栏用这张
+│   └── favicon.png           徽标居中放进 64×64 透明方图，浏览器标签页图标
+├── logo-src.png              logo 原图（带白底的截图，make_logo.py 的输入；不参与部署）
 ├── data/
 │   ├── questions.js          原始题库源（已规范化 + 解析补全后回写，多行 JS 格式）
 │   ├── questions.original.js 规范化前的原始备份
-│   ├── bank-real.js          真实 CAAC 机长题库（1691 题，供 App 加载）
-│   ├── bank-demo.js          手写示例题库（20 题，含单选 + 多选）
+│   ├── bank-real.js          唯一的题库（1691 题，供 App 加载）
 │   └── reference-bank.json   辅助题库（同源 1621 题，解析未截断，用于交叉校验/补全）
 └── tools/
     ├── build_bank.py         规范化 questions.js → bank-real.js（结构重建 + 全库文本修正 + 解析补全）
+    ├── make_logo.py          logo 原图 → assets/ 三张图（抠白底 / 裁徽标 / 生成 favicon）
     ├── cross_check.py        交叉校验（编号对齐/答案冲突/选项集差异/解析完整性）
     ├── cross_report.txt      cross_check.py 的最新报告
     ├── scan_quality.py       数据体检（空选项/标签残留/答案越界/选项粘连/题干残片等）
@@ -33,10 +39,13 @@ caac-quiz/
     ├── dump_group.py         按题号打印题目全文，便于人工判定同族题
     ├── scan_suspicious.py    可疑题扫描（选项与解析冲突、解析自相矛盾）
     ├── shot_fixes.js         修复验证截图（playwright 打开 → 搜索跳题 → 截图）
+    ├── shot_logo.js          顶栏截图（桌面/移动 × 浅色/深色）校验 logo 与站名
     ├── verify_no_tip.js      回归守卫：确认各页面已无「答题技巧」折叠块
     ├── verify_live.js        线上校验：打开 Pages 公网地址断言题库/渲染/答题均正常
     └── smoke.js              playwright 冒烟测试
 ```
+
+> `tools/*.png` 与 `tools/*.log` 是调试产物，已在 `.gitignore` 里，不进仓库（约 4.7MB）。
 
 ## 数据规范化
 
@@ -77,8 +86,8 @@ python -m http.server 8080 --bind 127.0.0.1
 - 工作流：`.github/workflows/pages.yml`
   - `actions/configure-pages@v5` 带 `enablement: true` —— 首次运行会用工作流自带的 `GITHUB_TOKEN`
     **自动开启仓库的 Pages**，不需要人工去 Settings → Pages 点开关
-  - `upload-pages-artifact` 只打包 `index.html` / `assets/` / `data/` / `.nojekyll`，
-    不会把 `tools/` 里的脚本和截图发到线上
+  - `upload-pages-artifact` 只打包 `index.html` / `assets/` / `data/bank-real.js` / `.nojekyll`，
+    不会把 `tools/` 里的脚本截图发上线，也不发布 `data/` 下的原始题库与辅助库
 - `.nojekyll`：让 Pages 跳过 Jekyll 处理，静态文件原样输出
 - 换了题库或改了 `assets/` 记得同时改 `index.html` 里的 `?v=` 版本号，否则浏览器会吃缓存
 
@@ -88,10 +97,12 @@ python -m http.server 8080 --bind 127.0.0.1
 Git Credential Manager 拒绝弹认证界面）。push 请用：
 
 ```bash
-git -c http.proxy=http://127.0.0.1:7897 -c https.proxy=http://127.0.0.1:7897 \
-    -c http.version=HTTP/1.1 push origin main
+env -u http_proxy -u https_proxy \
+    git -c http.proxy=http://127.0.0.1:7897 -c https.proxy=http://127.0.0.1:7897 \
+        -c http.version=HTTP/1.1 push origin main
 ```
 
+- 先用 `env -u` 把环境里那两个可能指向死端口的 `http_proxy` / `https_proxy` 摘掉，再显式指定 7897
 - 代理端口 `7897` 是你本机的可用代理；环境变量里的 `http_proxy` 端口会变、可能是死的
 - `-c http.version=HTTP/1.1` 能绕开部分代理对分块响应的处理问题
 - 该通道偶发超时，**重试一两次即可成功**
@@ -108,14 +119,13 @@ git -c http.proxy=http://127.0.0.1:7897 -c https.proxy=http://127.0.0.1:7897 \
     { id, cat, type:'single'|'multi', q, opts:[选项,..],
       ans:number | number[],   // 单选=正确下标，多选=下标数组
       exp:'',                  // 答案解析
-      tip:'',                  // 本题专属技巧（可空）
       flag:''                  // 存疑原因（空字符串=正常，否则会标 ⚠）
     }
   ]
 }
 ```
 
-把新题库按以上结构写成 `window.XXX_BANK = {...}` 放入 `data/bank-real.js`（或新建 `data/bank-xxx.js` 并在 `index.html` 引入，并在 `assets/app.js` 的 `BANKS` 映射里加一项）即可。
+把新题库按以上结构写成 `window.CAAC_BANK = {...}` 覆盖 `data/bank-real.js` 即可 —— `assets/app.js` 直接读 `window.CAAC_BANK` 这个全局变量，没有题库映射表。改完记得同步 `index.html` 里的 `?v=`。
 
 ## ✅ 原「解析被截断到 100 字」硬伤：已用辅助题库补全
 
@@ -288,7 +298,9 @@ git -c http.proxy=http://127.0.0.1:7897 -c https.proxy=http://127.0.0.1:7897 \
 ## 界面说明
 
 - **章节选择**：不用横向 tag，改成一个「章节菜单」按钮（显示当前章节 + 已做/题量），点开是卡片式网格，每张卡带进度条与题量，18 个章节全部可见。错题页同理，用分组菜单筛选。
-- **切换题库**：点击顶部「题库名 + 下拉箭头」即可切换（真题库 / 示例库的数据分开保存）。
+- **站点名与 logo**：顶栏左侧是 CAAC 徽标（`assets/logo-mark.png`）+ 站名。站名文字取自题库的 `name` 字段
+  （`bank-real.js` 里为 `CAAC理论题库`，由 `tools/build_bank.py` 生成），副行显示「题量 · 章节数 · 版本」。
+- **切换题库**：已移除。现在是单题库应用，顶栏标题只作文本展示，不可点击。
 - **搜索**：顶部放大镜，支持题干关键词、章节名、题号（如 `#1039`），最多返回 50 条，点击直接跳转。
 - **桌面端**（≥1100px）：左侧题卡 + 右侧信息栏（学习概览 / 当前范围 / 题卡窗口 / 快捷键）。
 - **考试保护**：考试进行中切换页面会弹确认框，避免误触丢答案。
@@ -300,10 +312,52 @@ git -c http.proxy=http://127.0.0.1:7897 -c https.proxy=http://127.0.0.1:7897 \
 
 - 删除内容：`assets/app.js` 里的 `CAT_TIPS` / `TIP_RULES` / `DEFAULT_TIP` / `tipOf()`，以及题卡里的技巧渲染块；
   `assets/styles.css` 里只服务于技巧标签的 `.acc.tipb` / `.acc-b.tip` / `.acc-tag` 规则。
-- 保留内容：题库数据结构里的 `tip` 字段（`bank-demo.js` 的 20 道示例题仍带该字段，`bank-real.js` / `questions.js`
-  本来就没有；现在只是不再被界面使用），以便日后需要时可恢复。
+- 保留内容：题库数据结构里的 `tip` 字段（用作示例的手写题库已随本轮删除；`bank-real.js` / `questions.js`
+  本来就没有该字段），现在只是不再被界面使用，以便日后需要时可恢复。
 - 回归守卫：`tools/verify_no_tip.js` —— 用 playwright 跑遍 练习（背题 / 章节 / 随机）、错题、考试五个界面，
   断言整个 DOM 里既无「答题技巧」字样、也无 `.acc[data-acc="tip"]` 折叠块，同时确认「答案解析」仍在。
+
+## Logo 与站点名
+
+`assets/` 下三张图全部由 `tools/make_logo.py` 从一张带白底的截图 `logo-src.png` 生成，不要手改产物：
+
+```bash
+python tools/make_logo.py logo-src.png     # 省略参数时默认读根目录的 logo-src.png
+```
+
+| 产物 | 来源 | 用途 |
+| --- | --- | --- |
+| `assets/logo.png` | 整枚 logo，白边裁掉 | 备用（想用整枚时把 `index.html` 的 img src 换成它） |
+| `assets/logo-mark.png` | 只取彩色徽标区域 | 标题栏（`index.html` 的 `.logo img`） |
+| `assets/favicon.png` | 徽标居中进 64×64 透明方图 | `rel="icon"` / `apple-touch-icon` |
+
+两个容易踩的坑，都写在脚本注释里了：
+
+- **必须抠白底**。站点有深色主题，白底图在深色顶栏上会变成一个白方块。脚本按 `min(r,g,b)` 估 alpha 再反预乘还原颜色，抗锯齿边缘不糊。
+- **徽标要按「颜色」切，不能按「位置」切**。想只留徽标时，第一版按行切（`content_bands()`）会连「中国民航」黑字一起带进来；改成饱和度筛选后，黑字的 ClearType subpixel 彩色描边又被误判成「有颜色」，
+  外接框直接撑到整图高度。最终判据是 `max-min > 60` **且** `max > 90` —— 描边像素偏暗，被亮度这道闸门滤掉。
+  `content_bands()` 已保留在脚本里但不再调用。
+
+深色主题下蓝色飞翼对比度偏低，`styles.css` 里用 `[data-theme="dark"] .logo img { filter: brightness(1.25) drop-shadow(...) }` 提亮。
+
+回归校验：`node tools/shot_logo.js` —— 用 playwright 跑桌面/移动 × 浅色/深色四种组合，断言 logo 的 `naturalWidth > 0`（真的加载成功，不是裂图）、`document.title` 与顶栏站名，并各截一张 `.topbar` 图到 `tools/logo-*.png` 供肉眼确认。
+
+## 「示例题库」与切换题库（已下线）
+
+**2026-09-11：按需求移除。** 原先为了演示多选答题，仓库里带了一个手写的 20 题示例库（`data/bank-demo.js`），顶栏标题是个下拉按钮，可在「真题库 / 示例库」之间切换。
+
+- 已删除 `data/bank-demo.js`，以及 `assets/app.js` 里的 `BANKS` 映射、`bankId` 存档字段、`sheetBank()`、
+  `switchBank` / `bankPicker` 事件绑定。
+- 现在 `assets/app.js` 里是 `var BANK = window.CAAC_BANK;` —— 单题库，没有映射表。
+- `load()` 里保留了一句 `delete r.bankId;`：老存档里可能存着 `bankId: 'real'`，不清掉会走到取不到题库的分支。
+- 设置面板里原来的「题库切换」区改成了只展示题库名与统计。
+- 顺带清掉了 `tools/smoke.js` 里依赖示例库的多选用例（真题库 1691 题全是单选）。
+- 改完记得改 `index.html` 里 `app.js` / `bank-real.js` 的 `?v=`。
+
+> ⚠️ **踩坑记录**：清理示例库时用过一次 `git rm -q data/bank-demo.js`，结果 `data/` 下另外 4 个文件
+> （`bank-real.js` / `questions.js` / `questions.original.js` / `reference-bank.json`）一起从工作区消失了。
+> 用 `git restore data/` 恢复，blob hash 与 HEAD 完全一致、内容点数核对无误（1691 题 / 18 章节 / 1621 条辅助库），没有丢数据。
+> 教训：**删单个文件就别用会批量匹配的命令**，`git rm` 之后立刻 `git status` 确认范围。
 
 ## 快捷键
 

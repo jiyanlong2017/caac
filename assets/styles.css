@@ -48,16 +48,13 @@ svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke
   position:relative;z-index:20;
 }
 .tb-left{display:flex;align-items:center;gap:10px;min-width:0}
-.logo{
-  width:32px;height:32px;border-radius:9px;flex:0 0 auto;display:grid;place-items:center;
-  background:linear-gradient(135deg,var(--brand),#7aa2ff);color:#fff;font-weight:800;font-size:17px;
-}
+.logo{height:28px;flex:0 0 auto;display:flex;align-items:center}
+.logo img{height:100%;width:auto;display:block}
+/* 深色顶栏下，徽标的深蓝机翼对比度不足，稍微提亮 + 描边提清晰度 */
+[data-theme="dark"] .logo img{filter:brightness(1.25) drop-shadow(0 0 1px rgba(255,255,255,.45))}
 .tb-title{min-width:0;background:none;border:0;padding:3px 7px;margin-left:-7px;border-radius:9px;
-  text-align:left;cursor:pointer;transition:.15s;display:block}
-@media (hover:hover){ .tb-title:hover{background:var(--bg2)} }
-.tb-title:active{background:var(--line)}
+  text-align:left;cursor:default;display:block}
 .tb-title .t1{font-weight:700;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:52vw}
-.tb-title .t1 svg{width:13px;height:13px;vertical-align:-2px;color:var(--muted);margin-left:1px;stroke-width:2.4}
 .tb-title .t2{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:52vw}
 .tb-right{display:flex;gap:2px}
 .icon-btn{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;color:var(--text2);transition:.15s}

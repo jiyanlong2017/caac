@@ -147,28 +147,6 @@ function killTree(pid) {
     await sleep(400);
     await page.screenshot({ path: ROOT + '/tools/shot-menu-mobile.png' });
 
-    step = '示例题库(多选)';
-    await page.setViewportSize({ width: 1440, height: 900 });
-    const sc2 = await T('#sheetClose'); if (sc2 && await sc2.isVisible()) { await sc2.click(); await sleep(200); }
-    await page.click('#bankPicker', { timeout: 8000 });
-    await sleep(400);
-    await page.click('[data-act="switchBank"][data-k="demo"]', { timeout: 5000 });
-    await sleep(600);
-    console.log('切库后:', await txt('#bankName'), '|', await txt('#bankMeta'));
-    await page.click('.tab[data-tab="practice"]', { timeout: 5000 });
-    await sleep(300);
-    await page.click('#modeChips .chip[data-mode="chapter"]', { timeout: 5000 });
-    await sleep(300);
-    let found = false;
-    for (let i = 0; i < 25 && !found; i++) { found = !!(await T('#cardWrap .tag.multi', 400)); if (!found) { await page.click('#btnNext'); await sleep(120); } }
-    console.log('找到多选题:', found);
-    if (found) {
-      await page.click('#cardWrap .opt[data-i="0"]', { timeout: 5000 }); await sleep(120);
-      await page.click('#cardWrap .opt[data-i="1"]', { timeout: 5000 }); await sleep(120);
-      const cf = await T('#cardWrap [data-act="confirm"]');
-      if (cf) { await cf.click(); await sleep(350); }
-      console.log('多选判定:', (await txt('#cardWrap .verdict')).slice(0, 26));
-    }
     step = 'done';
   } catch (e) {
     errs.push('FATAL @' + step + ': ' + e.message.split('\n')[0]);

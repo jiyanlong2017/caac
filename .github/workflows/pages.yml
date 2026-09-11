@@ -28,15 +28,18 @@ jobs:
         with:
           enablement: true
 
-      # 纯静态站：只把要发布的文件挑出来，避免把 tools/ 脚本一起发上去
+      # 纯静态站：只把页面真正要用的文件挑出来。
+      # data/ 下只有 bank-real.js 会被 <script> 加载，其余是原始题库/辅助库/规范化备份，
+      # 既用不到（合计 ~3.3MB）也没必要公开发布，所以逐个拷而不是整个 data/ 拷。
       - name: Stage site
         run: |
-          mkdir -p _site
-          cp index.html _site/
-          cp .nojekyll _site/
-          cp -r assets data _site/
+          mkdir -p _site/data
+          cp index.html .nojekyll _site/
+          cp -r assets _site/
+          cp data/bank-real.js _site/data/
           echo "--- staged ---"
           find _site -type f | sort
+          du -sh _site
 
       - uses: actions/upload-pages-artifact@v3
         with:
