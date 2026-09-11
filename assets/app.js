@@ -161,10 +161,6 @@
     h += '<button class="mini fav' + (bstate().fav[qi] ? ' on' : '') + '" data-act="fav" title="收藏">' + ICON.star + '</button>';
     h += '<button class="mini doubt' + (bstate().doubt[qi] ? ' on' : '') + '" data-act="doubt" title="标记存疑">' + ICON.doubt + '</button>';
     h += '</div>';
-    if (q.flag) {
-      h += '<div class="flagbar">' + ICON.warn + '<div>⚠ 存疑题：' + esc(q.flag) +
-        '<br><span style="font-weight:500;opacity:.85">答案仅供参考，请以法规原文或教练讲解为准。</span></div></div>';
-    }
     h += '<h2 class="qtext">' + esc(q.q) + '</h2><div class="opts">';
     q.opts.forEach(function (o, i) {
       var cls = 'opt' + (multi ? ' multi' : ''), mk = '';
