@@ -101,7 +101,12 @@
     arr.sort(function (a, c) { return (b.wrong[c] | 0) - (b.wrong[a] | 0); });
     return arr;
   }
-  function currentList() { return UI.mode === 'wrong' ? wrongList(UI.chapter) : UI.list; }
+  // 错题模式必须用「进入时快照」下来的 UI.list，不能每次重算 wrongList()：
+  // record() 里答对会 delete b.wrong[qi]、答错会 +1 并被排到最前，若这里实时重算，
+  // 列表就会边做边缩短 / 重新排序，而 UI.idx 是静态递增的 —— 索引漂移后表现为
+  // 「答题卡顺序乱」＋「还剩一半就提示『错题重做完啦』」。
+  // UI.list 在 setMode / setChapter / 初始化三处都已按 wrongList() 生成好了。
+  function currentList() { return UI.list; }
 
   /* ---------------- 统计 ---------------- */
   function stats() {
@@ -658,7 +663,14 @@
     switchTab('practice');
     var l = currentList(), pos = l.indexOf(qi);
     if (pos < 0) {
-      UI.chapter = '全部'; UI.list = buildList(UI.mode === 'wrong' ? 'chapter' : UI.mode, '全部');
+      UI.chapter = '全部';
+      if (UI.mode === 'wrong') {
+        UI.list = wrongList('全部');
+        // 要跳的题根本不是错题 —— 再留在错题模式就会「模式=错题、列表=全部题」，不自洽
+        if (UI.list.indexOf(qi) < 0) { UI.mode = 'chapter'; UI.list = buildList('chapter', '全部'); }
+      } else {
+        UI.list = buildList(UI.mode, '全部');
+      }
       renderCatMenu();
       l = currentList(); pos = l.indexOf(qi);
     }
