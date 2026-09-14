@@ -602,7 +602,7 @@
     var inp = $('#searchInput'); if (!inp) return;
     setTimeout(function () { inp.focus(); }, 50);
     var token = 0;
-    inp.addEventListener('input', function () {
+    function runSearch() {
       var q = inp.value.trim(); if (!q) {
         $('#searchResults').innerHTML = '<div class="empty" style="padding:18px"><div class="d">输入关键词搜索题干；支持题号（#）、章节名、中文关键字</div></div>';
         return;
@@ -635,7 +635,9 @@
           $('#searchResults').innerHTML = h;
         }, 80);
       })(token);
-    });
+    }
+    inp.addEventListener('input', runSearch);
+    inp.addEventListener('compositionend', runSearch);
     inp.addEventListener('keydown', function (e) {
       if (e.key === 'Enter') { e.preventDefault(); var f = $('.hitem[data-act="jump"]'); if (f) f.click(); }
     });
