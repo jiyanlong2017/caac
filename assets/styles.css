@@ -61,6 +61,25 @@ svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke
 .icon-btn:active{background:var(--bg2);transform:scale(.94)}
 .icon-btn.on{color:var(--brand);background:var(--brand-soft)}
 
+/* ---- 速查入口：顶部按钮 + 底部 tab（金色醒目标识） ---- */
+.cheat-btn,.cheat-tab{text-decoration:none;position:relative}
+.cheat-btn{color:#b47600;background:linear-gradient(135deg,#fff3d1,#ffe0a3);border:1px solid #f0c46a}
+[data-theme="dark"] .cheat-btn{color:#ffd479;background:linear-gradient(135deg,#3a2c10,#4d3a12);border-color:#6b5119}
+.cheat-btn:active{transform:scale(.94)}
+.cheat-btn .dot,.cheat-tab .cheat-dot{
+  position:absolute;top:2px;right:2px;width:8px;height:8px;border-radius:50%;
+  background:var(--err);border:1.5px solid var(--card);box-sizing:content-box
+}
+.cheat-tab{color:#b47600!important}
+[data-theme="dark"] .cheat-tab{color:#ffd479!important}
+.cheat-tab svg{fill:#f5a524;stroke:#b47600}
+[data-theme="dark"] .cheat-tab svg{fill:#ffd479;stroke:#8a6a1c}
+.cheat-tab::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:32px;height:2.5px;border-radius:0 0 3px 3px;background:#f5a524}
+.cheat-tab .cheat-dot{animation:cheatPulse 1.8s ease-in-out infinite}
+@keyframes cheatPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.75)}}
+@media (prefers-reduced-motion:reduce){.cheat-tab .cheat-dot{animation:none}}
+
 /* ================= 页面容器 ================= */
 main{flex:1 1 auto;min-height:0;position:relative}
 .page{position:absolute;inset:0;display:flex;flex-direction:column;min-height:0}

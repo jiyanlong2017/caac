@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CAAC 理论速查 · 高频考点</title>
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="assets/favicon.png" type="image/png">
+<link rel="stylesheet" href="assets/styles.css?v=20260929a">
+<style>
+:root{
+  --hot:#e5484d; --hot-soft:#fdecec;
+  --trap:#7f56d9; --trap-soft:#f4f0ff;
+  --star:#f5a524; --star-soft:#fff6e5;
+}
+[data-theme="dark"]{
+  --hot:#ff6b6f; --hot-soft:#39191b;
+  --trap:#a78bfa; --trap-soft:#241d3a;
+  --star:#f5a524; --star-soft:#3a2c10;
+}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:860px;margin:0 auto;padding:0 14px calc(40px + env(safe-area-inset-bottom,0px))}
+
+.top{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 0 8px}
+.top .row{display:flex;align-items:center;gap:10px;max-width:860px;margin:0 auto;padding:0 14px}
+.top .back{display:inline-flex;align-items:center;gap:5px;text-decoration:none;color:var(--text2);font-size:13px;padding:6px 10px;border:1px solid var(--line);border-radius:999px}
+.top .back svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.top h1{font-size:16px;font-weight:600;margin:0;flex:1}
+.top .badge{font-size:11px;padding:3px 8px;border-radius:999px;background:var(--brand-soft);color:var(--brand);font-weight:600;white-space:nowrap}
+.iconbtn{width:34px;height:34px;flex:0 0 auto;border:1px solid var(--line);background:var(--card);border-radius:10px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2)}
+.iconbtn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+.hero{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;margin:14px 0;box-shadow:var(--shadow)}
+.hero p{margin:0;font-size:13px;line-height:1.7;color:var(--text2)}
+.hero b{color:var(--text)}
+
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.filters button{font-size:12.5px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--text2);cursor:pointer}
+.filters button.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
+
+.sec{margin:0 0 18px}
+.sec-h{display:flex;align-items:center;gap:9px;margin:20px 2px 10px}
+.sec-h .ic{width:30px;height:30px;flex:0 0 auto;border-radius:9px;display:flex;align-items:center;justify-content:center}
+.sec-h .ic svg{width:17px;height:17px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sec-h h2{font-size:15px;font-weight:600;margin:0;flex:1}
+.sec-h .cnt{font-size:11.5px;color:var(--muted)}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+.card+.card{margin-top:10px}
+.card-h{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line2)}
+.card-h .fire{flex:0 0 auto;font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;white-space:nowrap}
+.fire.hot{background:var(--hot-soft);color:var(--hot)}
+.fire.trap{background:var(--trap-soft);color:var(--trap)}
+.fire.star{background:var(--star-soft);color:#b47600}
+[data-theme="dark"] .fire.star{color:var(--star)}
+.card-h .tt{font-size:13.5px;font-weight:600;line-height:1.5;flex:1}
+.card-b{padding:12px 14px}
+.card-b .ids{font-size:11.5px;color:var(--muted);margin-bottom:8px}
+.card-b .ids code{background:var(--bg2);padding:1px 6px;border-radius:5px;font-size:11px;font-family:ui-monospace,Menlo,Consolas,monospace}
+
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line2);vertical-align:top;line-height:1.55}
+th{font-size:11.5px;color:var(--muted);font-weight:600;background:var(--card2)}
+tr:last-child td{border-bottom:0}
+td.k{font-weight:600;white-space:nowrap}
+.hl{color:var(--hot);font-weight:600}
+.ok{color:var(--ok);font-weight:600}
+
+ul.li{margin:0;padding-left:18px}
+ul.li li{font-size:13px;line-height:1.75;margin-bottom:5px}
+ul.li li b{color:var(--text)}
+ul.li li .idtag{font-size:11px;color:var(--muted);font-family:ui-monospace,monospace}
+
+.mnemonic{background:var(--brand-soft);border-left:3px solid var(--brand);border-radius:8px;padding:9px 12px;font-size:13px;line-height:1.7;margin:8px 0 0;color:var(--text)}
+.mnemonic b{color:var(--brand)}
+
+.warnbox{background:var(--warn-soft);border-left:3px solid var(--warn);border-radius:8px;padding:10px 12px;font-size:12.5px;line-height:1.7;margin:10px 0 0;color:var(--text2)}
+.warnbox b{color:var(--text)}
+
+.src{font-size:11.5px;color:var(--muted);line-height:1.7;margin-top:10px}
+.src a{color:var(--brand);text-decoration:none}
+.foot{text-align:center;font-size:11.5px;color:var(--muted);padding:22px 0 0;line-height:1.8}
+.hide{display:none!important}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="row">
+    <a class="back" href="index.html">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>题库
+    </a>
+    <h1>理论速查 · 高频考点</h1>
+    <span class="badge" id="cntBadge">— 条</span>
+    <button class="iconbtn" id="btnTheme" title="切换主题">
+      <svg viewBox="0 0 24 24" id="icoTheme"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>
+    </button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="hero">
+    <p><b>每条都绑定题库题号</b>，可直接在题库里搜 <code>id</code> 核对。带 <span style="color:var(--hot);font-weight:600">火苗</span> 的是高频必背，<span style="color:var(--trap);font-weight:600">紫色</span> 是术语陷阱（题库用词与标准说法不一致，考场上按题面选），<span style="color:#b47600;font-weight:600">星标</span> 是外部经验印证过的通用技巧。</p>
+  </div>
+
+  <div class="filters" id="filters">
+    <button class="on" data-f="all">全部</button>
+    <button data-f="axis">稳定性与舵面</button>
+    <button data-f="stall">失速与迎角</button>
+    <button data-f="trap">术语陷阱</button>
+    <button data-f="law">法规数字</button>
+    <button data-f="power">动力与设备</button>
+    <button data-f="tips">应试技巧</button>
+  </div>
+
+  <!-- ===== 稳定性与舵面 ===== -->
+  <div class="sec" data-f="axis">
+    <div class="sec-h">
+      <div class="ic" style="background:var(--brand-soft)">
+        <svg viewBox="0 0 24 24" style="stroke:var(--brand)"><circle cx="12" cy="12" r="8"/><path d="M12 4v16M4 12h16"/></svg>
+      </div>
+      <h2>一、坐标轴 ↔ 稳定性 ↔ 谁负责</h2>
+      <span class="cnt">最高频，一错串三题</span>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <span class="fire hot">必背</span>
+        <div class="tt">三轴 ↔ 稳定性 ↔ 责任部件（完整对应表）</div>
+      </div>
+      <div class="card-b">
+        <table>
+          <tr><th>绕什么轴</th><th>稳定性名称</th><th>别称</th><th>谁负责</th></tr>
+          <tr><td class="k">横轴</td><td>纵向稳定性</td><td>俯仰</td><td>水平尾翼</td></tr>
+          <tr><td class="k">立轴</td><td>航向稳定性</td><td>方向</td><td class="hl">垂直尾翼</td></tr>
+          <tr><td class="k">纵轴</td><td>横向稳定性</td><td>滚转</td><td>机翼上反角</td></tr>
+        </table>
+        <p class="mnemonic"><b>口诀：</b>横轴管俯仰（纵向）、立轴管偏航（航向/方向）、纵轴管滚转（横向）。<b>横对纵、立对角、纵对滚</b>——轴名和稳定名是"交叉"的，这是最容易记反的地方。</p>
+        <div class="ids">题库：<code>1132</code> <code>1133</code> <code>1134</code> <code>1108</code> <code>1110</code> <code>1117</code></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <span class="fire hot">必背</span>
+        <div class="tt">舵面操纵 → 绕哪个轴运动</div>
+      </div>
+      <div class="card-b">
+        <table>
+          <tr><th>操纵</th><th>绕轴</th><th>英文简称</th></tr>
+          <tr><td class="k">升降舵</td><td>横轴</td><td>ELE</td></tr>
+          <tr><td class="k">副翼</td><td>纵轴</td><td>AIL</td></tr>
+          <tr><td class="k">方向舵</td><td>立轴</td><td>RUD</td></tr>
+          <tr><td class="k">油门</td><td>—</td><td>THR</td></tr>
+        </table>
+        <ul class="li" style="margin-top:8px">
+          <li>平飞中<b>向后拉杆</b> → 迎角<b>增大</b>；<b>向前推杆</b> → 迎角<b>减小</b>。 <span class="idtag">id 907 / 908</span></li>
+          <li>向右压副翼杆 → <b>左翼升力大于右翼</b>（飞机右滚）。 <span class="idtag">id 909</span></li>
+        </ul>
+        <div class="ids">题库：<code>969</code> <code>970</code> <code>971</code> <code>1477</code> <code>907</code> <code>908</code> <code>909</code></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <span class="fire hot">必背</span>
+        <div class="tt">副翼"逆偏转"与协调转弯</div>
+      </div>
+      <div class="card-b">
+        <ul class="li">
+          <li>副翼转弯时，<b>外侧机翼阻力大</b>（外侧副翼下偏）。</li>
+          <li>修正逆偏转：<b>副翼往哪压转弯，方向舵就往哪蹬</b>。右转弯→方向舵右偏；左转弯→方向舵左偏。</li>
+          <li>坡度转弯同时踩方向舵 → <b>协调转弯，减小转弯半径并减少侧滑</b>。</li>
+          <li>转弯向心力 = <b>升力的水平分力</b>。</li>
+        </ul>
+        <div class="ids">题库：<code>957</code> <code>956</code> <code>958</code> <code>1280</code> <code>935</code></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <span class="fire hot">必背</span>
+        <div class="tt">侧滑回正 · 重心影响 · 匹配关系</div>
+      </div>
+      <div class="card-b">
+        <ul class="li">
+          <li>具静稳定性飞机向<b>左</b>侧滑 → 机头<b>向左</b>转（垂尾风标效应，机头追来流）。 <span class="idtag">id 1105</span></li>
+          <li>重心位置影响的是 <b>纵向稳定性和航向稳定性</b>（不是"只对纵向"、不是"横向"）。 <span class="idtag">id 1114</span></li>
+          <li>横向与航向、纵向与航向之间 → <b>必须匹配适当</b>（都不是"互相独立"）。 <span class="idtag">id 1109 / 1116</span></li>
+          <li>滚转平衡中主要力矩 = <b>机翼升力力矩</b>。 <span class="idtag">id 1121</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 失速与迎角 ===== -->
+  <div class="sec" data-f="stall">
+    <div class="sec-h">
+      <div class="ic" style="background:var(--err-soft)">
+        <svg viewBox="0 0 24 24" style="stroke:var(--err)"><path d="M12 3l9 16H3z"/><path d="M12 9.5v4M12 17h.01"/></svg>
+      </div>
+      <h2>二、失速与迎角</h2>
+      <span class="cnt">考最多，最爱埋反直觉答案</span>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <span class="fire hot">必背</span>
+        <div class="tt">失速的本质：只有一个原因</div>
+      </div>
+      <div class="card-b">
+        <p class="mnemonic"><b>核心：</b>失速的直接原因 / 唯一原因 = <b>迎角超过临界迎角</b>。跟速度大小<b>没有</b>直接关系——"速度太小导致失速"是错的。</p>
+        <ul class="li" style="margin-top:8px">
+          <li>失速的直接原因 → <b>迎角过大</b>。 <span class="idtag">id 962</span></li>
+          <li>飞机失速的原因 → <b>迎角超过临界迎角</b>。 <span class="idtag">id 927</span></li>
+          <li>"失速"定义 → 飞机以<b>大于临界迎角</b>飞行。 <span class="idtag">id 997</span></li>
+          <li>临界迎角 = <b>升力系数最大时的迎角</b>。 <span class="idtag">id 998</span></li>
+          <li>机理：迎角达临界值 → <b>机翼上表面附面层大部分分离</b>。 <span class="idtag">id 1138</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <span class="fire hot">必背</span>
+        <div class="tt">失速速度：变大还是变小</div>
+      </div>
+      <div class="card-b">
+        <table>
+          <tr><th>条件变化</th><th>失速速度</th><th>id</th></tr>
+          <tr><td>放下襟翼</td><td class="ok">减小</td><td>905</td></tr>
+          <tr><td>水平转弯坡度增大</td><td class="hl">增大</td><td>928</td></tr>
+          <tr><td>平飞载重量越大</td><td class="hl">越大</td><td>1028</td></tr>
+        </table>
+        <div class="warnbox">注意区分：<b>放襟翼</b>让失速速度变小（因为 CLmax 抬高），但<b>临界迎角反而降低</b>。这俩方向相反，别混。（详见"襟翼"考点，id 1158）</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <span class="fire hot">必背</span>
+        <div class="tt">失速处置与现象</div>
+      </div>
+      <div class="card-b">
+        <ul class="li">
+          <li>出现失速 → <b>立即推杆到底</b>（推杆减小迎角）。不是拉杆、不是蹬舵。 <span class="idtag">id 959</span></li>
+          <li>接近失速 → <b>操纵迟钝、操纵效率降低</b>。 <span class="idtag">id 1096</span></li>
+          <li><b>大迎角或高速飞行都可能失速</b>；不能靠加大动力克服；亚音速不只有大迎角失速。 <span class="idtag">id 1148</span></li>
+          <li>常规布局失速时 → 机翼向上的力与尾翼向下的力<b>都降低</b>。 <span class="idtag">id 899</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <span class="fire hot">必背</span>
+        <div class="tt">迎角与压力中心</div>
+      </div>
+      <div class="card-b">
+        <ul class="li">
+          <li>迎角定义 = <b>翼弦与相对气流</b>的夹角（不是与水平面）。 <span class="idtag">id 919</span></li>
+          <li>飞机上升 / 下降时，迎角都<b>大于零</b>。 <span class="idtag">id 926 / 929</span></li>
+          <li>迎角<b>增大</b> → 压力中心<b>前移</b>；迎角<b>减小</b> → <b>后移</b>。 <span class="idtag">id 932 / 931</span></li>
+          <li>迎角超临界 → 升力系数<b>迅速减小</b>。 <span class="idtag">id 896</span></li>
+          <li>临界迎角时 <b>升力系数最大</b>。 <span class="idtag">id 903</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <span class="fire star">外部印证</span>
+        <div class="tt">襟翼增升：升力↑、临界迎角↓</div>
+      </div>
+      <div class="card-b">
+        <p class="mnemonic" style="background:var(--star-soft);border-left-color:var(--star)"><b>口诀：</b>后缘襟翼下偏 → <b>弯度增大</b> → 升力系数上限↑，同时后缘气流更早分离 → <b>临界迎角↓</b>。</p>
+        <ul class="li" style="margin-top:8px">
+          <li>主因是<b>增大了机翼弯度</b>（不是增面积、不是形成缝隙）。 <span class="idtag">id 1158</span></li>
+          <li>增机翼面积 ↔ 增<b>升力大小</b>；缝隙是"开缝襟翼"特征，作用是<b>延迟分离</b>，方向相反。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 术语陷阱 ===== -->
+  <div class="sec" data-f="trap">
+    <div class="sec-h">
+      <div class="ic" style="background:var(--trap-soft)">
+        <svg viewBox="0 0 24 24" style="stroke:var(--trap)"><path d="M12 3l9 16H3z"/><path d="M12 8v5M12 16.5h.01"/></svg>
+      </div>
+      <h2>三、术语陷阱（题库用词 ≠ 标准说法）</h2>
+      <span class="cnt">考场上按题面选，心里记标准说法</span>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <span class="fire trap">陷阱</span>
+        <div class="tt">垂直尾翼到底对应哪种稳定性</div>
+      </div>
+      <div class="card-b">
+        <table>
+          <tr><th>id</th><th>题目用词</th><th>严格说法</th><th>考试怎么办</th></tr>
+          <tr><td class="k">1178</td><td>增垂直安定面面积 → <b>横向稳定性</b></td><td>方向稳定性</td><td class="hl">选 B</td></tr>
+          <tr><td class="k">1103</td><td>方向稳定性 → 影响最大是垂尾</td><td>一致</td><td class="ok">选垂尾</td></tr>
+          <tr><td class="k">1133</td><td>绕立轴 = <b>航向</b>稳定性</td><td>=方向稳定性</td><td class="ok">等价，不犹豫</td></tr>
+          <tr><td class="k">1108</td><td>航向稳定性 = 绕<b>立轴</b></td><td>一致</td><td class="ok">选立轴</td></tr>
+        </table>
+        <div class="warnbox"><b>冲突点：</b>题库自己在前几题里把"垂尾→方向稳定性"讲得很清楚，到 <b>id 1178</b> 却把垂尾归成"横向稳定性"。这是 CAAC 备考题库的常见混用。<b>考试就选 B，别改答案</b>；但你脑子里要知道它严格叫<b>方向稳定性</b>。</div>
+        <div class="ids">题库：<code>1178</code> <code>1103</code> <code>1133</code> <code>1108</code></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <span class="fire trap">陷阱</span>
+        <div class="tt">"航向"和"方向"是同一个东西</div>
+      </div>
+      <div class="card-b">
+        <ul class="li">
+          <li><b>航向稳定性 = 方向稳定性 = 偏航稳定性</b>，三个名字一个概念，都指绕立轴。 <span class="idtag">id 1133 / 1103 / 1108</span></li>
+          <li><b>横向稳定性 = 滚转稳定性</b>，绕纵轴，跟"航向"是两码事。 <span class="idtag">id 1110 / 1134</span></li>
+          <li>别被"横向"两个字骗了——它不是"左右方向"的意思，而是"绕纵轴的滚转"。这是最容易栽的地方。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 法规数字 ===== -->
+  <div class="sec" data-f="law">
+    <div class="sec-h">
+      <div class="ic" style="background:var(--ok-soft)">
+        <svg viewBox="0 0 24 24" style="stroke:var(--ok)"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <h2>四、法规 · 重量分类与空域</h2>
+      <span class="cnt">分值占比最高，数字题集中</span>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <span class="fire hot">必背</span>
+        <div class="tt">重量分类（题库口径）</div>
+      </div>
+      <div class="card-b">
+        <table>
+          <tr><th>类别</th><th>判定标准</th><th>id</th></tr>
+          <tr><td class="k">微型</td><td>空机重量 <b>&lt; 250g</b>（题库 id 15 用 ≤7kg 为旧口径，注意）</td><td>223 / 15</td></tr>
+          <tr><td class="k">轻型</td><td>空机 ≤ <b>4kg</b>，且最大起飞重量 ≤ <b>7kg</b></td><td>32</td></tr>
+          <tr><td class="k">小型</td><td>空机重量 ≤ <b>15kg</b>（微型、轻型除外）</td><td>31</td></tr>
+        </table>
+        <div class="warnbox"><b>外部文章有错，别抄：</b>网上有文章写"小型 = 空机 ≤15kg 且起飞全重 ≤25kg"，这是把旧标准混进来。以题库 <b>id 31/32</b> 和现行《无人驾驶航空器飞行管理暂行条例》为准。</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <span class="fire hot">必背</span>
+        <div class="tt">空域与实名登记</div>
+      </div>
+      <div class="card-b">
+        <ul class="li">
+          <li>空域三分：<b>管制空域、监视空域、报告空域</b>（不是"非管制空域"）。 <span class="idtag">id 142</span></li>
+          <li>空域管理具体办法由 <b>国务院和中央军事委员会</b>制定。 <span class="idtag">id 141</span></li>
+          <li>高空空域 = 标准海平面气压 <b>6000m（不含）以上</b>。 <span class="idtag">id 127</span></li>
+          <li>实名登记适用：最大起飞重量 <b>250g（含）</b>以上。 <span class="idtag">id 223 / 1</span></li>
+          <li>等待空域最低高度层距最高障碍物不小于 <b>600m</b>。 <span class="idtag">id 118</span></li>
+          <li>同一空域同时只允许 <b>一至三批</b>航空器，高度范围间隔通常 <b>2000m</b> 以上。 <span class="idtag">id 116</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <span class="fire hot">必背</span>
+        <div class="tt">执照与训练小时（题库口径）</div>
+      </div>
+      <div class="card-b">
+        <table>
+          <tr><th>项目</th><th>数值</th><th>id</th></tr>
+          <tr><td>多旋翼 视距内 带飞</td><td>≥ <b>10</b> 小时</td><td>283</td></tr>
+          <tr><td>多旋翼 视距内 单飞</td><td>≥ <b>5</b> 小时</td><td>280</td></tr>
+          <tr><td>多旋翼 超视距 带飞</td><td>≥ <b>15</b> 小时</td><td>281</td></tr>
+          <tr><td>多旋翼 超视距 单飞</td><td>≥ <b>5</b> 小时</td><td>282</td></tr>
+          <tr><td>飞行教员申请人年龄</td><td>≥ <b>18</b> 周岁</td><td>211</td></tr>
+          <tr><td>执照颁发部门</td><td><b>民航局下属司（局）</b></td><td>234</td></tr>
+        </table>
+        <div class="warnbox"><b>外部文章互相矛盾，不要信：</b>有说执照有效期 24 个月、有说 6 年；有说理论成绩 12 个月。<b>这些数字各来源不一致</b>，我没采用——考试请以你培训机构的官方讲义和最新题库为准。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 动力与设备 ===== -->
+  <div class="sec" data-f="power">
+    <div class="sec-h">
+      <div class="ic" style="background:var(--warn-soft)">
+        <svg viewBox="0 0 24 24" style="stroke:var(--warn)"><path d="M13 2L4 14h6l-1 8 9-12h-6z"/></svg>
+      </div>
+      <h2>五、动力与设备 · 瞬时必答</h2>
+      <span class="cnt">纯记忆，抽到就要秒答</span>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <span class="fire hot">必背</span>
+        <div class="tt">动力 / 电池 / 天线</div>
+      </div>
+      <div class="card-b">
+        <ul class="li">
+          <li>多轴动力电池 → <b>Li-po 锂聚合物电池</b>；充电选 <b>平衡充电器</b>。 <span class="idtag">id 469 / 457</span></li>
+          <li>6S 4P 12000mAh 3C → 最大电流 <b>36A</b>（12Ah × 3C）。 <span class="idtag">id 432</span></li>
+          <li>60A 电调 → 电池要选 <b>大于 60A</b>。 <span class="idtag">id 436</span></li>
+          <li>KV1000 电机 + 11.1V 电池 → 空载 <b>11100 转/分</b>（1000×11.1）。 <span class="idtag">id 433</span></li>
+          <li>GPS 天线装 <b>飞行器顶部</b>；链路天线要 <b>远离</b>飞控和 GPS。 <span class="idtag">id 471 / 466</span></li>
+          <li>GPS 定位最少 <b>4～5 颗</b>星保基本安全。 <span class="idtag">id 583</span></li>
+          <li>多轴在地面风速大于 <b>4 级</b>时作业会影响安全与拍摄稳定。 <span class="idtag">id 648</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <span class="fire hot">必背</span>
+        <div class="tt">高度分类（km 级，别混）</div>
+      </div>
+      <div class="card-b">
+        <table>
+          <tr><th>类别</th><th>任务高度</th><th>id</th></tr>
+          <tr><td class="k">超低空</td><td>0 – 100m</td><td>8 / 24</td></tr>
+          <tr><td class="k">低空</td><td>100 – 1000m</td><td>28</td></tr>
+          <tr><td class="k">中空</td><td>1000 – 6000m</td><td>29</td></tr>
+          <tr><td class="k">高空空域</td><td>&gt; 6000m</td><td>127</td></tr>
+          <tr><td class="k">超高空</td><td>&gt; 18000m</td><td>27</td></tr>
+        </table>
+        <p class="mnemonic"><b>口诀：</b>超低一百，低空一千，中空六千，超高一万八。<b>100 / 1000 / 6000 / 18000</b> 四个数往上翻。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <span class="fire hot">必背</span>
+        <div class="tt">阻力：谁减小谁（爱考）</div>
+      </div>
+      <div class="card-b">
+        <ul class="li">
+          <li>翼梢小翼 → 减小 <b>诱导阻力</b>。 <span class="idtag">id 1081</span></li>
+          <li>翼型后部产生涡流 → <b>压差阻力</b>增加。 <span class="idtag">id 1086</span></li>
+          <li>涡阻力等于其他阻力和处 → 阻力达 <b>最小值</b>。 <span class="idtag">id 987</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 应试技巧 ===== -->
+  <div class="sec" data-f="tips">
+    <div class="sec-h">
+      <div class="ic" style="background:var(--star-soft)">
+        <svg viewBox="0 0 24 24" style="stroke:var(--star)"><path d="M12 3l2.6 5.6 6.1.8-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9.4l6.1-.8z"/></svg>
+      </div>
+      <h2>六、应试技巧</h2>
+      <span class="cnt">外部经验</span>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <span class="fire star">经验</span>
+        <div class="tt">刷题顺序：按分值，不按书序</div>
+      </div>
+      <div class="card-b">
+        <ul class="li">
+          <li><b>法规空域优先</b>（分值占比最高、数字考点集中、最好拿分）→ 其次飞行原理 → 气象 → 设备 → 应急。</li>
+          <li>同一类题<b>集中刷</b>形成记忆惯性，不要一上来就整套模拟。</li>
+          <li><b>错题单独收藏，刷 2 遍</b>再做整套卷；考前 3 天只刷高频真题 + 错题。</li>
+        </ul>
+        <p class="src">来源：<a href="https://www.qingzhicheng.com/jiazhao/caaczhizhao/7922.html" target="_blank" rel="noopener">起航无人机服务平台</a>（多家培训机构的刷题方法论基本一致）</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <span class="fire star">经验</span>
+        <div class="tt">选择题排除法（考场提速）</div>
+      </div>
+      <div class="card-b">
+        <ul class="li">
+          <li>两个选项<b>意思相反</b> → 答案必在二者之间，先排除另外两个。</li>
+          <li>出现<b>极端数字、极端操作</b>（"立即猛拉""永远""完全"）→ 大概率排除。</li>
+          <li>法规题优先选 <b>提前报备、申请空域、终止飞行、降落</b> 这类保守表述。</li>
+          <li>描述<b>最长、最严谨规范</b>的选项，常常是官方标准答案话术。</li>
+        </ul>
+        <p class="src">来源：<a href="https://www.qingzhicheng.com/jiazhao/caaczhizhao/7922.html" target="_blank" rel="noopener">起航无人机服务平台</a> · <a href="https://www.toutiao.com/article/7592060167257129515/" target="_blank" rel="noopener">天途无人机培训</a></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <span class="fire star">经验</span>
+        <div class="tt">绝对化词语陷阱</div>
+      </div>
+      <div class="card-b">
+        <p class="mnemonic" style="background:var(--star-soft);border-left-color:var(--star)"><b>看到就警惕：</b>必须、一定、所有、永久、任何、只需、绝不 → <b>大概率为错</b>。<br><b>看到可优先考虑：</b>应当、一般情况、视情况、评估后 → <b>大概率为对</b>。</p>
+        <div class="warnbox">这是"经验规律"不是铁律，遇到具体知识点（比如"失速的直接原因是迎角过大"）还是要按题库逻辑走。别把技巧当答案。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    内容校对自本地题库 1691 题 · 每条均可按 id 检索复核<br>
+    外部要点仅收录经官方规章或题库交叉验证的部分
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var root = document.documentElement;
+  var KEY = 'caac-theme';
+  function setTheme(t){
+    root.setAttribute('data-theme', t);
+    document.querySelector('meta[name=theme-color]').setAttribute('content', t==='dark'?'#0e1116':'#ffffff');
+    try{ localStorage.setItem(KEY, t); }catch(e){}
+  }
+  try{
+    var saved = localStorage.getItem(KEY);
+    if(saved){ setTheme(saved); }
+    else if(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches){ setTheme('dark'); }
+  }catch(e){}
+  document.getElementById('btnTheme').addEventListener('click', function(){
+    setTheme(root.getAttribute('data-theme')==='dark' ? 'light' : 'dark');
+  });
+
+  var secs = Array.prototype.slice.call(document.querySelectorAll('.sec'));
+  document.getElementById('cntBadge').textContent = secs.length + ' 大块';
+
+  var btns = Array.prototype.slice.call(document.querySelectorAll('#filters button'));
+  btns.forEach(function(b){
+    b.addEventListener('click', function(){
+      btns.forEach(function(x){ x.classList.remove('on'); });
+      b.classList.add('on');
+      var f = b.getAttribute('data-f');
+      secs.forEach(function(s){
+        s.classList.toggle('hide', !(f==='all' || s.getAttribute('data-f')===f));
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>
