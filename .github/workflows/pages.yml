@@ -34,7 +34,7 @@ jobs:
       - name: Stage site
         run: |
           mkdir -p _site/data
-          cp index.html .nojekyll _site/
+          cp index.html cheatsheet.html .nojekyll _site/
           cp -r assets _site/
           cp data/bank-real.js _site/data/
           echo "--- staged ---"
