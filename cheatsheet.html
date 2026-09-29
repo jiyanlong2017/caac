@@ -6,7 +6,7 @@
 <title>CAAC 理论速查 · 高频考点</title>
 <meta name="theme-color" content="#ffffff">
 <link rel="icon" href="assets/favicon.png" type="image/png">
-<link rel="stylesheet" href="assets/styles.css?v=20260929a">
+<link rel="stylesheet" href="assets/styles.css?v=20260929b">
 <style>
 :root{
   --hot:#e5484d; --hot-soft:#fdecec;
@@ -18,6 +18,8 @@
   --trap:#a78bfa; --trap-soft:#241d3a;
   --star:#f5a524; --star-soft:#3a2c10;
 }
+/* 页面本身是长文档流，必须解掉主站的「全屏不滚动」布局（body{overflow:hidden} / height:100%） */
+html,body{height:auto;min-height:100%;overflow:visible;overflow-y:auto;overscroll-behavior:auto}
 body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;-webkit-font-smoothing:antialiased}
 .wrap{max-width:860px;margin:0 auto;padding:0 14px calc(40px + env(safe-area-inset-bottom,0px))}
 
